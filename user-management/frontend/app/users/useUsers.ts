@@ -49,9 +49,14 @@ export const useUsers = () => {
         response = await axios.delete(
           `http://localhost:8000/api/users/${selectedUser.id}`
         );
+        console.log(response?.status);
       }
 
-      if (response?.status === 200 || response?.status === 201) {
+      if (
+        response?.status === 200 ||
+        response?.status === 201 ||
+        response?.status === 204
+      ) {
         fetchUsers();
         setOperation(null);
         setSelectedUser(null);
