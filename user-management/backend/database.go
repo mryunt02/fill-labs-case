@@ -59,8 +59,16 @@ func saveUser(user *User) error {
     if err != nil {
         return err
     }
-    _, err = stmt.Exec(user.Name, user.Email)
-    return err
+    result, err := stmt.Exec(user.Name, user.Email)
+    if err != nil {
+        return err
+    }
+    id, err := result.LastInsertId()
+    if err != nil {
+        return err
+    }
+    user.ID = int(id)
+    return nil
 }
 
 func updateUserByID(id int, user *User) error {
