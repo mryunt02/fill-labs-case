@@ -8,12 +8,15 @@ import {
   Stack,
   Box,
   IconButton,
+  Chip,
+  alpha,
 } from '@mui/material';
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Person as PersonIcon,
+  CheckCircle as CheckCircleIcon,
 } from '@mui/icons-material';
 import UserForm from './UserForm';
 import axios from 'axios';
@@ -46,8 +49,33 @@ export default function Users() {
       minWidth: 130,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <PersonIcon sx={{ color: 'primary.main' }} />
-          <Typography>{params.value}</Typography>
+          <PersonIcon
+            sx={{
+              color:
+                params.row.id === selectedUser?.id
+                  ? 'primary.main'
+                  : 'text.secondary',
+            }}
+          />
+          <Typography
+            sx={{
+              fontWeight:
+                params.row.id === selectedUser?.id ? 'bold' : 'regular',
+              color:
+                params.row.id === selectedUser?.id ? 'primary.main' : 'inherit',
+            }}
+          >
+            {params.value}
+          </Typography>
+          {params.row.id === selectedUser?.id && (
+            <Chip
+              size='small'
+              label='Selected'
+              color='primary'
+              icon={<CheckCircleIcon />}
+              sx={{ ml: 1 }}
+            />
+          )}
         </Box>
       ),
     },
@@ -141,7 +169,9 @@ export default function Users() {
                 onClick={() => handleOperation('edit')}
                 disabled={!selectedUser}
                 sx={{
-                  bgcolor: 'info.light',
+                  bgcolor: selectedUser
+                    ? 'info.light'
+                    : 'action.disabledBackground',
                   '&:hover': { bgcolor: 'info.main', color: 'white' },
                   '&.Mui-disabled': { bgcolor: 'action.disabledBackground' },
                 }}
@@ -153,7 +183,9 @@ export default function Users() {
                 onClick={() => handleOperation('delete')}
                 disabled={!selectedUser}
                 sx={{
-                  bgcolor: 'error.light',
+                  bgcolor: selectedUser
+                    ? 'error.light'
+                    : 'action.disabledBackground',
                   '&:hover': { bgcolor: 'error.main', color: 'white' },
                   '&.Mui-disabled': { bgcolor: 'action.disabledBackground' },
                 }}
@@ -171,10 +203,13 @@ export default function Users() {
             pageSizeOptions={[5, 10, 25]}
             onRowSelectionModelChange={(ids) => {
               const selectedId = ids[0];
-              setSelectedUser(
-                users.find((user) => user.id === selectedId) || null
+              setSelectedUser((prev) =>
+                prev?.id === selectedId
+                  ? null
+                  : users.find((user) => user.id === selectedId) || null
               );
             }}
+            rowSelectionModel={selectedUser ? [selectedUser.id] : []}
             sx={{
               border: 'none',
               '& .MuiDataGrid-cell:focus': {
@@ -182,6 +217,13 @@ export default function Users() {
               },
               '& .MuiDataGrid-row:hover': {
                 bgcolor: 'action.hover',
+                cursor: 'pointer',
+              },
+              '& .MuiDataGrid-row.Mui-selected': {
+                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+                '&:hover': {
+                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12),
+                },
               },
               '& .MuiDataGrid-columnHeaders': {
                 bgcolor: 'primary.light',
