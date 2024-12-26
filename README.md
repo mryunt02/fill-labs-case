@@ -120,7 +120,7 @@ cd user-management-system
 ```sh
 cd backend
 go mod tidy
-go run main.go
+go run .
 ```
 
 3. **Frontend Setup:**
