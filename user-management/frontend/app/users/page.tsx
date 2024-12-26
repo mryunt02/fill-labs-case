@@ -1,7 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Button, Container, Stack } from '@mui/material';
+import {
+  Container,
+  Paper,
+  Typography,
+  Stack,
+  Box,
+  IconButton,
+} from '@mui/material';
+import {
+  Add as AddIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Person as PersonIcon,
+} from '@mui/icons-material';
 import UserForm from './UserForm';
 
 interface User {
@@ -18,9 +31,31 @@ export default function Users() {
   const [operation, setOperation] = useState<Operation>(null);
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 90 },
-    { field: 'name', headerName: 'Name', width: 130 },
-    { field: 'email', headerName: 'Email', width: 200 },
+    {
+      field: 'id',
+      headerName: 'ID',
+      width: 90,
+      headerAlign: 'center',
+      align: 'center',
+    },
+    {
+      field: 'name',
+      headerName: 'Name',
+      flex: 1,
+      minWidth: 130,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <PersonIcon sx={{ color: 'primary.main' }} />
+          <Typography>{params.value}</Typography>
+        </Box>
+      ),
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      flex: 2,
+      minWidth: 200,
+    },
   ];
 
   useEffect(() => {
@@ -79,29 +114,66 @@ export default function Users() {
   };
 
   return (
-    <Container>
+    <Container maxWidth='lg' sx={{ py: 4 }}>
       {!operation ? (
-        <>
-          <Stack direction='row' spacing={2} sx={{ my: 2 }}>
-            <Button variant='contained' onClick={() => handleOperation('new')}>
-              New
-            </Button>
-            <Button variant='contained' onClick={() => handleOperation('edit')}>
-              Edit
-            </Button>
-            <Button
-              variant='contained'
-              color='error'
-              onClick={() => handleOperation('delete')}
+        <Paper elevation={3} sx={{ p: 3 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mb: 3,
+            }}
+          >
+            <Typography
+              variant='h5'
+              component='h1'
+              sx={{ fontWeight: 'bold', color: 'primary.main' }}
             >
-              Delete
-            </Button>
-          </Stack>
+              User Management
+            </Typography>
+            <Stack direction='row' spacing={2}>
+              <IconButton
+                color='primary'
+                onClick={() => handleOperation('new')}
+                sx={{
+                  bgcolor: 'primary.light',
+                  '&:hover': { bgcolor: 'primary.main', color: 'white' },
+                }}
+              >
+                <AddIcon />
+              </IconButton>
+              <IconButton
+                color='info'
+                onClick={() => handleOperation('edit')}
+                disabled={!selectedUser}
+                sx={{
+                  bgcolor: 'info.light',
+                  '&:hover': { bgcolor: 'info.main', color: 'white' },
+                  '&.Mui-disabled': { bgcolor: 'action.disabledBackground' },
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                color='error'
+                onClick={() => handleOperation('delete')}
+                disabled={!selectedUser}
+                sx={{
+                  bgcolor: 'error.light',
+                  '&:hover': { bgcolor: 'error.main', color: 'white' },
+                  '&.Mui-disabled': { bgcolor: 'action.disabledBackground' },
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Stack>
+          </Box>
           <DataGrid
             rows={users}
             columns={columns}
             initialState={{
-              pagination: { paginationModel: { pageSize: 5 } },
+              pagination: { paginationModel: { pageSize: 10 } },
             }}
             pageSizeOptions={[5, 10, 25]}
             onRowSelectionModelChange={(ids) => {
@@ -110,8 +182,22 @@ export default function Users() {
                 users.find((user) => user.id === selectedId) || null
               );
             }}
+            sx={{
+              border: 'none',
+              '& .MuiDataGrid-cell:focus': {
+                outline: 'none',
+              },
+              '& .MuiDataGrid-row:hover': {
+                bgcolor: 'action.hover',
+              },
+              '& .MuiDataGrid-columnHeaders': {
+                bgcolor: 'primary.light',
+                color: 'primary.dark',
+              },
+            }}
+            autoHeight
           />
-        </>
+        </Paper>
       ) : (
         <UserForm
           user={selectedUser}
