@@ -16,6 +16,7 @@ import {
   Person as PersonIcon,
 } from '@mui/icons-material';
 import UserForm from './UserForm';
+import axios from 'axios';
 
 interface User {
   id: number;
@@ -63,9 +64,12 @@ export default function Users() {
   }, []);
 
   const fetchUsers = async () => {
-    const response = await fetch('http://localhost:8080/api/users');
-    const data = await response.json();
-    setUsers(data);
+    try {
+      const response = await axios.get('http://localhost:8000/api/users');
+      setUsers(response.data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
   };
 
   const handleOperation = (op: Operation) => {
@@ -80,36 +84,25 @@ export default function Users() {
     try {
       let response;
       if (operation === 'new') {
-        response = await fetch('http://localhost:8080/api/users', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(user),
-        });
+        response = await axios.post('http://localhost:8000/api/users', user);
       } else if (operation === 'edit' && selectedUser) {
-        response = await fetch(
-          `http://localhost:8080/api/users/${selectedUser.id}`,
-          {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...user, id: selectedUser.id }),
-          }
+        response = await axios.put(
+          `http://localhost:8000/api/users/${selectedUser.id}`,
+          user
         );
       } else if (operation === 'delete' && selectedUser) {
-        response = await fetch(
-          `http://localhost:8080/api/users/${selectedUser.id}`,
-          {
-            method: 'DELETE',
-          }
+        response = await axios.delete(
+          `http://localhost:8000/api/users/${selectedUser.id}`
         );
       }
 
-      if (response?.ok) {
+      if (response?.status === 200 || response?.status === 201) {
         fetchUsers();
         setOperation(null);
         setSelectedUser(null);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error saving user:', error);
     }
   };
 
