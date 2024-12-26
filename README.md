@@ -1,3 +1,42 @@
+# Go questions
+
+## Questions
+
+1. **Sort Words by 'a' Characters**:
+
+   - Function: `sortWords`
+   - Description: Sorts words by the number of 'a' characters in decreasing order, by length if the number of 'a' characters is the same, and lexicographically if lengths are the same.
+   - Example:
+     ```go
+     words := []string{"aaaasd", "a", "aab", "aaabcd", "ef", "cssssssd", "fdz", "kf", "zc", "lklklklklklklklkl", "l"}
+     sortedWords := sortWords(words)
+     fmt.Println("Sorted words:", sortedWords)
+     ```
+
+2. **Generate Sequence**:
+
+   - Function: [generateSequence](http://_vscodecontentref_/1)
+   - Description: Generates a sequence of numbers based on the given input.
+   - Example:
+     ```go
+     number := 9
+     result := generateSequence(number)
+     fmt.Println("Generated sequence:")
+     for _, num := range result {
+         fmt.Println(num)
+     }
+     ```
+
+3. **Most Repeated Word**:
+   - Function: [mostRepeated](http://_vscodecontentref_/2)
+   - Description: Finds the most repeated string in the given slice.
+   - Example:
+     ```go
+     wordsForQ3 := []string{"apple", "pie", "apple", "red", "red", "red","apple","apple","apple"}
+     mostRepeatedWord := mostRepeated(wordsForQ3)
+     fmt.Println("Most repeated word:", mostRepeatedWord)
+     ```
+
 # User Management System
 
 This is a simple User Management System built using Go for the backend and React with TypeScript and Next.js for the frontend. The system supports basic CRUD operations (Create, Read, Update, Delete) for managing users, with persistent storage via an SQLite database.
