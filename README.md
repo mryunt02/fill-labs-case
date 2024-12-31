@@ -111,8 +111,9 @@ Make sure you have the following installed on your machine:
 1. **Clone the repository:**
 
 ```sh
-git clone https://github.com/yourusername/user-management-system.git
-cd user-management-system
+git clone https://github.com/mryunt02/fill-labs-case.git
+cd fill-labs-case
+cd user-management
 ```
 
 2. **Backend Setup:**
@@ -133,7 +134,7 @@ npm run dev
 
 ### Running the Application
 
-- The backend server will start on `http://localhost:8080`
+- The backend server will start on `http://localhost:8000`
 - The frontend application will start on `http://localhost:3000`
 
 ### Running Tests
