@@ -15,6 +15,7 @@ export default function Users() {
     handleOperation,
     handleSave,
     setOperation,
+    loading,
   } = useUsers();
 
   return (
@@ -88,6 +89,7 @@ export default function Users() {
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
                 handleOperation={handleOperation} // Add this prop
+                loading={loading}
               />
             </Box>
           </Paper>

@@ -27,7 +27,7 @@ export function UserDataGrid({
   users,
   selectedUser,
   setSelectedUser,
-  loading = false,
+  loading,
   handleOperation,
 }: UserDataGridProps) {
   const columns: GridColDef[] = [
@@ -141,7 +141,7 @@ export function UserDataGrid({
       }}
       rowSelectionModel={selectedUser ? [selectedUser.id] : []}
       slots={{
-        noRows: () => <NoData onAdd={() => handleOperation('new')} />,
+        noRowsOverlay: () => <NoData onAdd={() => handleOperation('new')} />,
       }}
       sx={{
         border: 'none',
