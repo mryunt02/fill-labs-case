@@ -145,6 +145,10 @@ export function UserDataGrid({
       }}
       sx={{
         border: 'none',
+        '& .MuiBox-root': {
+          display: 'flex',
+          alignItems: 'center',
+        },
         '& .MuiDataGrid-root': {
           borderRadius: 2,
           overflow: 'hidden',
