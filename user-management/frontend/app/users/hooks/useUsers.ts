@@ -6,6 +6,7 @@ export const useUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [operation, setOperation] = useState<Operation>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchUsers();
@@ -13,10 +14,14 @@ export const useUsers = () => {
 
   const fetchUsers = async () => {
     try {
+      setLoading(true);
       const data = await userService.getUsers();
       setUsers(data);
     } catch (error) {
       console.error('Error fetching users:', error);
+      setUsers([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,6 +57,7 @@ export const useUsers = () => {
 
   return {
     users,
+    loading,
     selectedUser,
     operation,
     setSelectedUser,

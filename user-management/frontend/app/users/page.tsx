@@ -75,19 +75,11 @@ export default function Users() {
               sx={{
                 borderRadius: 1,
                 overflow: 'hidden',
+                minHeight: 400, // Add this
+                display: 'flex', // Add this
+                flexDirection: 'column', // Add this
                 '& .MuiDataGrid-root': {
-                  border: 'none',
-                  '& .MuiDataGrid-cell': {
-                    borderColor: 'divider',
-                  },
-                  '& .MuiDataGrid-columnHeaders': {
-                    backgroundColor: 'action.hover',
-                    borderBottom: '2px solid',
-                    borderColor: 'divider',
-                  },
-                  '& .MuiDataGrid-row:hover': {
-                    backgroundColor: 'action.hover',
-                  },
+                  // ...existing styles...
                 },
               }}
             >
@@ -95,6 +87,7 @@ export default function Users() {
                 users={users}
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
+                handleOperation={handleOperation} // Add this prop
               />
             </Box>
           </Paper>
