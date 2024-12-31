@@ -1,24 +1,10 @@
 'use client';
-import {
-  Container,
-  Paper,
-  Typography,
-  Stack,
-  Box,
-  IconButton,
-  Chip,
-  alpha,
-} from '@mui/material';
-import {
-  Add as AddIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Person as PersonIcon,
-  CheckCircle as CheckCircleIcon,
-} from '@mui/icons-material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import UserForm from './UserForm';
-import { useUsers } from './useUsers';
+
+import { Container, Paper, Typography, Box } from '@mui/material';
+import { UserActions } from './components/UserActions';
+import { UserDataGrid } from './components/UserDataGrid';
+import { UserForm } from './components/UserForm';
+import { useUsers } from './hooks/useUsers';
 
 export default function Users() {
   const {
@@ -31,169 +17,109 @@ export default function Users() {
     setOperation,
   } = useUsers();
 
-  const columns: GridColDef[] = [
-    {
-      field: 'id',
-      headerName: 'ID',
-      width: 90,
-      headerAlign: 'center',
-      align: 'center',
-    },
-    {
-      field: 'name',
-      headerName: 'Name',
-      flex: 1,
-      minWidth: 130,
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <PersonIcon
-            sx={{
-              color:
-                params.row.id === selectedUser?.id
-                  ? 'primary.main'
-                  : 'text.secondary',
-            }}
-          />
-          <Typography
-            sx={{
-              fontWeight:
-                params.row.id === selectedUser?.id ? 'bold' : 'regular',
-              color:
-                params.row.id === selectedUser?.id ? 'primary.main' : 'inherit',
-            }}
-          >
-            {params.value}
-          </Typography>
-          {params.row.id === selectedUser?.id && (
-            <Chip
-              size='small'
-              label='Selected'
-              color='primary'
-              icon={<CheckCircleIcon />}
-              sx={{ ml: 1 }}
-            />
-          )}
-        </Box>
-      ),
-    },
-    {
-      field: 'email',
-      headerName: 'Email',
-      flex: 2,
-      minWidth: 200,
-    },
-  ];
-
   return (
-    <Container maxWidth='lg' sx={{ py: 4 }}>
-      {!operation ? (
-        <Paper elevation={3} sx={{ p: 3 }}>
-          <Box
+    <div className='min-h-screen bg-gradient-to-br from-gray-50 to-blue-50'>
+      <Container maxWidth='lg' sx={{ py: 6 }}>
+        {!operation ? (
+          <Paper
+            elevation={6}
             sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              mb: 3,
+              p: 4,
+              borderRadius: 2,
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(10px)',
             }}
           >
-            <Typography
-              variant='h5'
-              component='h1'
-              sx={{ fontWeight: 'bold', color: 'primary.main' }}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: 4,
+                pb: 3,
+                borderBottom: '1px solid',
+                borderColor: 'divider',
+              }}
             >
-              User Management
-            </Typography>
-            <Stack direction='row' spacing={2}>
-              <IconButton
-                color='primary'
-                onClick={() => handleOperation('new')}
-                sx={{
-                  bgcolor: 'primary.light',
-                  '&:hover': { bgcolor: 'primary.main', color: 'white' },
-                }}
-              >
-                <AddIcon />
-              </IconButton>
-              <IconButton
-                color='info'
-                onClick={() => handleOperation('edit')}
-                disabled={!selectedUser}
-                sx={{
-                  bgcolor: selectedUser
-                    ? 'info.light'
-                    : 'action.disabledBackground',
-                  '&:hover': { bgcolor: 'info.main', color: 'white' },
-                  '&.Mui-disabled': { bgcolor: 'action.disabledBackground' },
-                }}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                color='error'
-                onClick={() => handleOperation('delete')}
-                disabled={!selectedUser}
-                sx={{
-                  bgcolor: selectedUser
-                    ? 'error.light'
-                    : 'action.disabledBackground',
-                  '&:hover': { bgcolor: 'error.main', color: 'white' },
-                  '&.Mui-disabled': { bgcolor: 'action.disabledBackground' },
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Stack>
-          </Box>
-          <DataGrid
-            rows={users}
-            columns={columns}
-            initialState={{
-              pagination: { paginationModel: { pageSize: 10 } },
-            }}
-            pageSizeOptions={[5, 10, 25]}
-            onRowSelectionModelChange={(ids) => {
-              const selectedId = ids[0];
-              setSelectedUser((prev) =>
-                prev?.id === selectedId
-                  ? null
-                  : users.find((user) => user.id === selectedId) || null
-              );
-            }}
-            rowSelectionModel={selectedUser ? [selectedUser.id] : []}
-            sx={{
-              border: 'none',
-              '& .MuiDataGrid-cell:focus': {
-                outline: 'none',
-              },
-              '& .MuiDataGrid-row:hover': {
-                bgcolor: 'action.hover',
-                cursor: 'pointer',
-              },
-              '& .MuiDataGrid-row.Mui-selected': {
-                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
-                '&:hover': {
-                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12),
+              <Box>
+                <Typography
+                  variant='h4'
+                  component='h1'
+                  sx={{
+                    fontWeight: 700,
+                    background: 'linear-gradient(45deg, #1976d2, #42a5f5)',
+                    backgroundClip: 'text',
+                    color: 'transparent',
+                    mb: 1,
+                  }}
+                >
+                  User Management
+                </Typography>
+                <Typography
+                  variant='body1'
+                  color='text.secondary'
+                  sx={{ mt: 1 }}
+                >
+                  Manage your system users and their e-mails
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <UserActions
+                  selectedUser={selectedUser}
+                  handleOperation={handleOperation}
+                />
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                borderRadius: 1,
+                overflow: 'hidden',
+                '& .MuiDataGrid-root': {
+                  border: 'none',
+                  '& .MuiDataGrid-cell': {
+                    borderColor: 'divider',
+                  },
+                  '& .MuiDataGrid-columnHeaders': {
+                    backgroundColor: 'action.hover',
+                    borderBottom: '2px solid',
+                    borderColor: 'divider',
+                  },
+                  '& .MuiDataGrid-row:hover': {
+                    backgroundColor: 'action.hover',
+                  },
                 },
-              },
-              '& .MuiDataGrid-columnHeaders': {
-                bgcolor: 'primary.light',
-                color: 'primary.dark',
-              },
+              }}
+            >
+              <UserDataGrid
+                users={users}
+                selectedUser={selectedUser}
+                setSelectedUser={setSelectedUser}
+              />
+            </Box>
+          </Paper>
+        ) : (
+          <Paper
+            elevation={6}
+            sx={{
+              p: 4,
+              borderRadius: 2,
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(10px)',
             }}
-            autoHeight
-          />
-        </Paper>
-      ) : (
-        <UserForm
-          user={selectedUser}
-          operation={operation}
-          onSave={handleSave}
-          onBack={() => {
-            setOperation(null);
-            setSelectedUser(null);
-          }}
-        />
-      )}
-    </Container>
+          >
+            <UserForm
+              user={selectedUser}
+              operation={operation}
+              onSave={handleSave}
+              onBack={() => {
+                setOperation(null);
+                setSelectedUser(null);
+              }}
+            />
+          </Paper>
+        )}
+      </Container>
+    </div>
   );
 }

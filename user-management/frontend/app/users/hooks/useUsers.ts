@@ -1,13 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-type Operation = 'new' | 'edit' | 'delete' | null;
+import { User, Operation } from '../types/user';
+import { userService } from '../services/userService';
 
 export const useUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -20,8 +13,8 @@ export const useUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/users');
-      setUsers(response.data);
+      const data = await userService.getUsers();
+      setUsers(data);
     } catch (error) {
       console.error('Error fetching users:', error);
     }
@@ -38,26 +31,17 @@ export const useUsers = () => {
   const handleSave = async (user: Omit<User, 'id'>) => {
     try {
       let response;
+
       if (operation === 'new') {
-        response = await axios.post('http://localhost:8000/api/users', user);
+        response = await userService.createUser(user);
       } else if (operation === 'edit' && selectedUser) {
-        response = await axios.put(
-          `http://localhost:8000/api/users/${selectedUser.id}`,
-          user
-        );
+        response = await userService.updateUser(selectedUser.id, user);
       } else if (operation === 'delete' && selectedUser) {
-        response = await axios.delete(
-          `http://localhost:8000/api/users/${selectedUser.id}`
-        );
-        console.log(response?.status);
+        response = await userService.deleteUser(selectedUser.id);
       }
 
-      if (
-        response?.status === 200 ||
-        response?.status === 201 ||
-        response?.status === 204
-      ) {
-        fetchUsers();
+      if (response && response.status >= 200 && response.status < 300) {
+        await fetchUsers();
         setOperation(null);
         setSelectedUser(null);
       }
